@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Translate</title>
+
+                
+</head>
+<body>
+    <section class="container forms">
+        <div class="form translate-link">
+            <div class="form-content">
+                <header>Translate</header>
+
+                <form id="translate" method="post" action="/translate">
+
+                    <div class="field input-field">
+                        <input type="text" id="content" name="Translate" placeholder="Digite aqui" class="input">
+                        <span id="error-content" class="error-message"></span>
+                    </div>
+
+                    <div class="translated">
+                        <p id="translated" name="Translated"></p>
+                        <span id="error" class="error-message"></span>
+                    </div>
+
+                   
+            
+            </div>
+
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function TranslateText() {
+            var content = document.getElementById("content").value;
+            var formData = new FormData();
+
+            formData.append("content", content);
+            
+            fetch("/translate", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("error").textContent = data.error.content;
+                } else {
+                    document.getElementById("error").textContent = "";
+                    document.getElementById("translated").textContent = data.translated;
+                }
+            })
+            .catch(function(error) {
+                console.error(error);
+            });
+        }
+        document.getElementById("content").addEventListener("input", function() {
+            TranslateText();
+        });
+    });    
+    </script>
+</body>
+</html>
